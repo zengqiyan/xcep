@@ -20,11 +20,16 @@ public class Apriori
 	/**
 	 * 项之间的分隔符
 	 */
-	private final static String ITEM_SPLIT = ";";
+	public final static String ITEM_SPLIT = ";";
 	/**
 	 * 项之间的分隔符
 	 */
-	private final static String CON = "->";
+	public final static String CON = "->";
+
+	/**
+	 * 项之间的分隔符
+	 */
+	public final static String CLASSIFY_SPLIT = ":";
 
 /*	public Map<String, Integer> apriori(List<Map<String, Object>> dataList){
 		List<String> newDataList = new ArrayList<>();
@@ -41,11 +46,11 @@ public class Apriori
 
 
 
-	public Map<String, Integer> apriori(List<Map<String,List<String>>> oneDataList,int rows,DataManager dataManager)
+	public Map<String, Integer> apriori(List<Map<String,Object>> oneDataList,int rows,DataManager dataManager)
 	{
 		Map<String, Integer> stepFrequentSetMap = new HashMap<>();
 
-		stepFrequentSetMap.putAll(findFrequentOneSets(toOneDataList(oneDataList)));
+		stepFrequentSetMap.putAll(findFrequentOneSets(toDataList(oneDataList)));
 		//频繁项集
 		Map<String, Integer> frequentSetMap = new HashMap<String, Integer>();
 		frequentSetMap.putAll(stepFrequentSetMap);
@@ -63,7 +68,7 @@ public class Apriori
 			while (dataListFlag){
 				List<Map<String, Object>> orgDataList = dataManager.run(offset);
 				if(orgDataList==null || orgDataList.size()==0){
-					dataListFlag = false;
+					break;
 				}else {
 					offset = offset+rows;
 				}
@@ -112,7 +117,7 @@ public class Apriori
 		StringBuffer sb = new StringBuffer();
 		orgDataList.forEach(d->{
 			d.forEach((k,v)->{
-				sb.append(k+"."+v+";");
+				sb.append(k+CLASSIFY_SPLIT+v+ITEM_SPLIT);
 			});
 			newDataList.add(sb.toString());
 			sb.setLength(0);
@@ -125,7 +130,7 @@ public class Apriori
 		orgDataList.forEach(d->{
 			d.forEach((k,v)->{
 				v.forEach(v1->{
-					sb.append(k+"."+v+";");
+					sb.append(k+CLASSIFY_SPLIT+v+ITEM_SPLIT);
 					newDataList.add(sb.toString());
 					sb.setLength(0);
 				});

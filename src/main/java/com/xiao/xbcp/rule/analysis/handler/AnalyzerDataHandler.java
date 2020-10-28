@@ -1,11 +1,8 @@
 package com.xiao.xbcp.rule.analysis.handler;
 
-import com.xiao.xbcp.rule.analysis.AnalyzerConfig;
+import com.xiao.xbcp.rule.analysis.AnalyzerProperties;
 import com.xiao.xbcp.rule.analysis.Classify;
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.MapHandler;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,13 +14,13 @@ import java.util.Map;
  * <p>
  * All rights Reserved, Designed www.xiao100.com
  */
-public abstract class AnalyzerInstanceHandler {
+public abstract class AnalyzerDataHandler {
 
 
     public abstract  List<Map<String,Object>>  getDataList(int offset);
 
-    public void init(AnalyzerConfig analyzerConfig){
-        setRows(analyzerConfig.getRows());
+    public  AnalyzerDataHandler(AnalyzerProperties analyzerProperties){
+        setRows(analyzerProperties.getRows());
         setClassifys(getClassifys());
     }
     private int totalCount;

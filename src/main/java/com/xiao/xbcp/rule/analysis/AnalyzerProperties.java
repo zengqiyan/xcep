@@ -13,12 +13,12 @@ import java.util.List;
  * All rights Reserved, Designed www.xiao100.com
  */
 @Data
-public class AnalyzerConfig {
-    private String analyzerConfigId;
+public class AnalyzerProperties {
+    private String analyzerId;
     private String countScript;
     private String dataScript;
+    private String dataSourceId;
     private int rows;
     private String type;
     private List<Classify> classifys;
-
 }

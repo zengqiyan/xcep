@@ -1,6 +1,7 @@
 package com.xiao.xbcp.rule.analysis.handler;
 
-import com.xiao.xbcp.rule.analysis.AnalyzerConfig;
+import com.xiao.xbcp.rule.analysis.AnalyzerProperties;
+import lombok.Setter;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
@@ -11,18 +12,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Description: 请描述你的文件
- *
- * @author 请在这里署名
+ * mysql 分析器数据处理器
+ * @author KyleZeng
  * @date 2020-10-27
- * <p>
- * All rights Reserved, Designed www.xiao100.com
  */
-public class MySqlAnalyzerInstanceHandler extends AnalyzerInstanceHandler{
+public class MySqlAnalyzerHandler extends AnalyzerDataHandler{
 
+    @Setter
     private DataSource dataSource;
 
     private String queryDataSql;
+
+    public MySqlAnalyzerHandler(AnalyzerProperties analyzerProperties) {
+        super(analyzerProperties);
+        queryDataSql = analyzerProperties.getDataScript();
+    }
+
     @Override
     public List<Map<String, Object>> getDataList(int offset) {
         try {
@@ -36,18 +41,5 @@ public class MySqlAnalyzerInstanceHandler extends AnalyzerInstanceHandler{
         }
         return null;
     }
-    @Override
-    public void init(AnalyzerConfig analyzerConfig){
-        try {
-            super.init(analyzerConfig);
-            QueryRunner queryRunner = new QueryRunner();
-            Connection connection = dataSource.getConnection();
-            String sql = analyzerConfig.getCountScript();
-            Map<String, Object> countMap = queryRunner.query(connection,sql,new MapHandler());
-            setTotalCount((Integer) countMap.get("count"));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
-    }
 }

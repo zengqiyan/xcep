@@ -2,9 +2,13 @@ package com.xiao.xbcp.rule.analysis;
 
 import lombok.Data;
 
-import java.util.List;
 @Data
 public  class Classify{
-        private String name;
-        private List<String> values;
+    public Classify(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    private String name;
+        private String value;
     }

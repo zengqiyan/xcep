@@ -339,6 +339,5 @@ public class Apriori3
 		for(Map.Entry<String,Double> mapping:list){
 			System.out.println(mapping.getKey()+":"+new BigDecimal(mapping.getValue()+""));
 		}
-
 	}
 }
