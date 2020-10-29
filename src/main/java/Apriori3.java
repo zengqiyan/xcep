@@ -290,7 +290,7 @@ public class Apriori3
 		Connection conn = null;
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://xhboss-test-public.mysql.polardb.rds.aliyuncs.com:3306/eduboss_xinghuo_test?useOldAliasMetadataBehavior=true&useUnicode=true&characterEncoding=utf-8","xhboss_test","bbAdb#6dfd#c4d");
+
 			conn.setAutoCommit(false);//设置自动提交为否
 		}catch (Exception e){
 			e.printStackTrace();

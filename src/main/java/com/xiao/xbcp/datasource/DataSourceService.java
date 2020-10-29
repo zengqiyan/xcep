@@ -20,9 +20,7 @@ public class DataSourceService {
 
     public DataSource getMySqlDataSource(String dataSourceId){
         JdbcDataSourceParam jdbcDataSourceParam = new JdbcDataSourceParam();
-        jdbcDataSourceParam.setJdbcUrl("jdbc:mysql://xhboss-test-public.mysql.polardb.rds.aliyuncs.com:3306/eduboss_xinghuo_test?useOldAliasMetadataBehavior=true&useUnicode=true&characterEncoding=utf-8");
-        jdbcDataSourceParam.setUserName("xhboss_test");
-        jdbcDataSourceParam.setPassword("bbAdb#6dfd#c4d");
+
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcDataSourceParam.getJdbcUrl());
         config.setUsername(jdbcDataSourceParam.getUserName());
