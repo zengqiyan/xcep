@@ -44,10 +44,10 @@ public interface ClassifyAnalyzerMapper {
     @Select("SELECT * FROM classify_analyzer")
     List<ClassifyAnalyzerVo> listClassifyAnalyzers(ClassifyAnalyzerSearchDto searchDto);
 
-    @Select("SELECT * FROM classify_analyzer_task")
+    @Select("SELECT * FROM classify_analyzer_task where classify_analyzer_id=#{classifyAnalyzerId}")
     List<ClassifyAnalyzerTaskVo> listClassifyAnalyzerTasks(ClassifyAnalyzerTaskSearchDto searchDto);
 
-    @Select("SELECT * FROM classify_analyzer_properties where classify_analyzer_id = #{classifyAnalyzerId}")
+    @Select("SELECT * FROM classify_analyzer_properties where classify_analyzer_id = #{classifyAnalyzerId} order by id desc limit 1")
     ClassifyAnalyzerProperties getClassifyAnalyzerPropertiesByClassifyAnalyzer(long classifyAnalyzerId);
 
 
@@ -61,49 +61,49 @@ public interface ClassifyAnalyzerMapper {
     @Update("update classify_analyzer set is_deleted = 1 where id = #{id} ")
     void softDelete(long id);
 
-    @Update("<script> update set classify_analyzer_properties " +
+    @Update("<script> update  classify_analyzer_properties set" +
             "        <if test=' classifyAnalyzerId != null and  classifyAnalyzerId != \"\" '>" +
             "            classify_analyzer_id=#{classifyAnalyzerId}," +
             "        </if>" +
             "        <if test=' dataScript != null and  dataScript != \"\" '>" +
-            "            data_script=#{dataScript}," +
+            "             data_script=#{dataScript}," +
             "        </if>" +
             "        <if test=' totalCount != 0 '>" +
-            "            total_count=#{totalCount}," +
+            "             total_count=#{totalCount}," +
             "        </if>" +
-            "        <if test=' classifys != null and  classifys != \"\" '>" +
-            "            classifys=#{classifys}," +
+            "        <if test=' classifysJson != null and  classifysJson != \"\" '>" +
+            "             classifys_json=#{classifysJson}," +
             "        </if>" +
             "        <if test=' dataSourceType != null and  dataSourceType != \"\" '>" +
-            "            data_source_type=#{dataSourceType}," +
+            "             data_source_type=#{dataSourceType}," +
             "        </if>" +
             "        <if test=' dataSourceId != 0'>" +
-            "            data_source_id=#{dataSourceId}," +
+            "             data_source_id=#{dataSourceId}," +
             "        </if>" +
-            "        update_time = #{updateTime} where id = #{id}" +
+            "         update_time = #{updateTime} where id = #{id}" +
             "</script>")
     void updateClassifyAnalyzerProperties(ClassifyAnalyzerProperties classifyAnalyzerProperties);
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO classify_analyzer_properties (classify_analyzer_id, data_script, total_count, classifys, data_type, data_source_id, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES (#{classifyAnalyzerId}, #{dataScript}, #{totalCount}, #{classifys}, #{dataType}, #{dataSourceId}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})")
+    @Insert("INSERT INTO classify_analyzer_properties (classify_analyzer_id, data_script, total_count, classifys_json, data_source_type, data_source_id, create_time, create_user, update_time, update_user, is_deleted) VALUES (#{classifyAnalyzerId}, #{dataScript}, #{totalCount}, #{classifysJson}, #{dataSourceType}, #{dataSourceId}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{isDeleted})")
     long insertClassifyAnalyzerProperties(ClassifyAnalyzerProperties classifyAnalyzerProperties);
 
     @Update("update classify_analyzer_properties set is_deleted = 1 where id = #{id} ")
     void softDeleteClassifyAnalyzerProperties(long id);
 
-    @Update("<script> update set classify_analyzer_task " +
+    @Update("<script> update  classify_analyzer_task set" +
             "        <if test=' status != null and  status != \"\" '>" +
-            "            status=#{status}," +
+            "             status=#{status}," +
             "        </if>" +
             "        <if test=' result != null and  result != \"\" '>" +
-            "            result=#{result}," +
+            "             result=#{result}," +
             "        </if>" +
-            "        update_time = #{updateTime} where id = #{id}" +
+            "         update_time = #{updateTime} where id = #{id}" +
             "</script>")
     void updateClassifyAnalyzerTask(ClassifyAnalyzerTask classifyAnalyzerTask);
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO classify_analyzer_task (classify_analyzer_id, name, status, result, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES (#{classifyAnalyzerId}, #{name}, #{status}, #{result}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{isDeleted})")
+    @Insert("INSERT INTO classify_analyzer_task (classify_analyzer_id, name, status, result, create_time, create_user, update_time, update_user, is_deleted) VALUES (#{classifyAnalyzerId}, #{name}, #{status}, #{result}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{isDeleted})")
     long insertClassifyAnalyzerTask(ClassifyAnalyzerTask classifyAnalyzerTask);
 
 }

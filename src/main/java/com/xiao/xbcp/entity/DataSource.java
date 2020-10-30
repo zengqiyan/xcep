@@ -23,7 +23,7 @@ public class DataSource implements Serializable {
 
     private long id;
     private String name;
-    private String params;
+    private String paramsJson;
     private String type;
     private Date createTime;
     private long createUser;
