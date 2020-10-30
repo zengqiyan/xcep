@@ -168,6 +168,18 @@ public class BeanUtil {
         }
     }
 
+    public static <T> Page<T> toPage(PageInfo<T> src) {
+        if (src == null) {
+            return Page.emptyPage();
+        } else {
+            Page<T> page = new Page<>();
+            page.setTotal(src.getTotal());
+            page.setPageSize(src.getPageSize());
+            page.setPageNum(src.getPageNum());
+            page.setList(src.getList());
+            return page;
+        }
+    }
 
     private static class LocalDateTimeConverter extends BidirectionalConverter<LocalDateTime, LocalDateTime> {
         @Override

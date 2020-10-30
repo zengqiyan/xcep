@@ -24,9 +24,9 @@ public class DataSourceService {
     @Autowired
     private DataSourceRepository dataSourceRepository;
 
-    private Map<String,DataSource> jdbcDataSources = new HashMap<>();
+    private Map<Long,DataSource> jdbcDataSources = new HashMap<>();
 
-    public DataSource getMySqlDataSource(String dataSourceId){
+    public DataSource getMySqlDataSource(long dataSourceId){
         if(jdbcDataSources.get(dataSourceId)!=null){
             return jdbcDataSources.get(dataSourceId);
         }

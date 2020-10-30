@@ -2,6 +2,8 @@ package com.xiao.xbcp.vo;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * Description: 请描述你的文件
  *
@@ -15,5 +17,5 @@ public class DataSourceDetailVo {
     private String id;
     private String name;
     private String type;
-    private String params;
+    private Map<String,Object> paramsMap;
 }

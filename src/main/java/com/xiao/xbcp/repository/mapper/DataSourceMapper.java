@@ -19,7 +19,7 @@ import java.util.List;
 public interface DataSourceMapper {
 
     @Select("select * from data_source where id = #{dataSourceId} and is_deleted = 0")
-    public DataSource getDataSource(@Param("dataSourceId") String dataSourceId);
+    public DataSource getDataSource(@Param("dataSourceId") long dataSourceId);
 
     @Select("select * from data_source where is_deleted = 0")
     public DataSourceListVo listDataSources(DataSourceSearchDto searchDto);
@@ -34,6 +34,17 @@ public interface DataSourceMapper {
     @Update("update data_source set is_deleted = 1 where id = #{dataSourceId} ")
     void softDelete(@Param("dataSourceId") long dataSourceId);
 
-    @Update("update data_source set name = #{} where id = #{dataSourceId} ")
+    @Update("<script> update set data_source " +
+            "        <if test=' name != null and  name != \"\" '>" +
+            "            name=#{name}," +
+            "        </if>" +
+            "        <if test=' params != null and  params != \"\" '>" +
+            "            params=#{params}," +
+            "        </if>" +
+            "        <if test=' type != null and  type != \"\" '>" +
+            "            type=#{type}," +
+            "        </if>" +
+            "        update_time = #{updateTime} where id = #{id}" +
+            "</script>")
     void update(DataSource dataSource);
 }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * All rights Reserved, Designed www.xiao100.com
  */
 
-public class ClassifyAnalyzer {
+public class ClassifyAnalyzerInstance {
     @Getter
     @Setter
     private AnalyzerDataHandler analyzerDataHandler;
@@ -32,10 +32,12 @@ public class ClassifyAnalyzer {
     public List<ClassifyRule> analysisClassifyRule(){
         Apriori apriori = new Apriori();
         List<Map<String,Object>> oneDataList = new ArrayList<>();
+        Map<String,Classify> classifyMap = new HashMap<>();
         classifys.forEach(c->{
             Map<String,Object> map = new HashMap<>();
-            map.put(c.getName(),c.getValue());
+            map.put(c.getValue(),c.getProperty().getValue());
             oneDataList.add(map);
+            classifyMap.put(c.getValue()+Apriori.CLASSIFY_SPLIT+c.getProperty().getValue(),c);
         });
         Map<String, Integer> map = apriori.apriori(oneDataList,rows,offset -> analyzerDataHandler.getDataList(offset));
         Map<String, Double> relationRulesMap = apriori.getRelationRules(map);
@@ -48,9 +50,9 @@ public class ClassifyAnalyzer {
             ClassifyRule classifyRule = new ClassifyRule();
             String[] relationStrArr = mapping.getKey().split(Apriori.CON);
             List<String> ifItemStrs= Arrays.asList(relationStrArr[0].split(Apriori.ITEM_SPLIT));
-            List<Classify> ifItem =  ifItemStrs.stream().map(item-> new Classify(item.split(Apriori.CLASSIFY_SPLIT)[0],item.split(Apriori.CLASSIFY_SPLIT)[1])).collect(Collectors.toList());
+            List<Classify> ifItem =  ifItemStrs.stream().map(item-> classifyMap.get(item)).collect(Collectors.toList());
             List<String> thenItemStrs = Arrays.asList(relationStrArr[1].split(Apriori.ITEM_SPLIT));
-            List<Classify> thenItem =  thenItemStrs.stream().map(item-> new Classify(item.split(Apriori.CLASSIFY_SPLIT)[0],item.split(Apriori.CLASSIFY_SPLIT)[1])).collect(Collectors.toList());
+            List<Classify> thenItem =  thenItemStrs.stream().map(item-> classifyMap.get(item)).collect(Collectors.toList());
             classifyRule.setIfItem(ifItem);
             classifyRule.setThenItem(thenItem);
             classifyRule.setConfidence(mapping.getValue());

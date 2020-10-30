@@ -1,4 +1,4 @@
-package com.xiao.xbcp.bo;
+package com.xiao.xbcp.dto;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * @author KyleZeng
  */
 @Data
-public  class Classify {
+public  class ClassifySaveDto {
     /**
      * name
      */
@@ -20,10 +20,10 @@ public  class Classify {
     /**
      * property
      */
-    private Property property;
+    private List<Property> properties;
 
     @Data
-    static public class  Property{
+    static class  Property{
         private String name;
         private String value;
     }

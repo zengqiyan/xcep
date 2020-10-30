@@ -17,7 +17,7 @@ public class Response<T> {
     /**
      * 状态码
      */
-    private int resultCode = 0;
+    private int resultCode = 200;
 
     /**
      * 异常信息
