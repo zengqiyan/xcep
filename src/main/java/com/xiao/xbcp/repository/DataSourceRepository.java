@@ -35,7 +35,7 @@ public class DataSourceRepository {
     public DataSourceDetailVo getDataSource(long dataSourceId) {
         DataSource ds = dataSourceMapper.getDataSource(dataSourceId);
         DataSourceDetailVo vo = BeanUtil.copy(ds,DataSourceDetailVo.class);
-        vo.setParamsMap((Map<String, Object>) JSON.parse(ds.getParams()));
+        vo.setParamsMap((Map<String, Object>) JSON.parse(ds.getParamsJson()));
         return vo;
     }
 
@@ -46,7 +46,7 @@ public class DataSourceRepository {
     }
     public void saveDataSource(DataSourceDetailDto dataSourceDetailDto){
         DataSource dataSource = BeanUtil.copy(dataSourceDetailDto,DataSource.class);
-        dataSource.setParams(JSON.toJSONString(dataSourceDetailDto.getParamsMap()));
+        dataSource.setParamsJson(JSON.toJSONString(dataSourceDetailDto.getParamsMap()));
         if(dataSourceDetailDto.getId()!=null){
             dataSourceMapper.update(dataSource);
         }else {
@@ -65,7 +65,7 @@ public class DataSourceRepository {
     public JdbcDataSourceParam getJdbcDataSourceParam(long dataSourceId){
         try {
             DataSource dataSource = dataSourceMapper.getDataSource(dataSourceId);
-            JdbcDataSourceParam  jdbcDataSourceParam = (JdbcDataSourceParam) JSON.parse(dataSource.getParams());
+            JdbcDataSourceParam  jdbcDataSourceParam =  JSON.parseObject(dataSource.getParamsJson(),JdbcDataSourceParam.class);
             return jdbcDataSourceParam;
         }catch (Exception e){
             e.printStackTrace();

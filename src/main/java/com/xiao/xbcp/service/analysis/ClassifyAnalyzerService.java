@@ -54,6 +54,7 @@ public class ClassifyAnalyzerService {
            classifyAnalyzerTaskDto.setResult(JSON.toJSONString(classifyRule)) ;
            classifyAnalyzerTaskDto.setStatus(AnalyzerTaskStatus.SUCCESS.getValue());
        }catch (Exception e){
+           e.printStackTrace();
            classifyAnalyzerTaskDto.setStatus(AnalyzerTaskStatus.FAIL.getValue());
        }finally {
            classifyAnalyzerRepository.saveClassifyAnalyzerTask(classifyAnalyzerTaskDto);

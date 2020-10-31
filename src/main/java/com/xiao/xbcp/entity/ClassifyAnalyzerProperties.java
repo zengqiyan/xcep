@@ -33,7 +33,7 @@ public class ClassifyAnalyzerProperties implements Serializable {
  /**
   * 分类属性
   */
-  private String classifys;
+  private String classifysJson;
  /**
   * 数据类型
   */

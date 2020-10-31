@@ -1,7 +1,7 @@
 CREATE TABLE `data_source` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) DEFAULT NULL,
-  `params` varchar(1000) DEFAULT NULL,
+  `params_json` varchar(1000) DEFAULT NULL,
   `type` varchar(20) DEFAULT NULL,
   `create_time` datetime,
   `create_user` bigint(11) DEFAULT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `classify_analyzer_properties` (
   `data_script` varchar(2000) DEFAULT NULL comment '数据脚本',
 	`rows` bigint DEFAULT 0 comment '分析量',
 	`total_count` bigint DEFAULT 0 comment '总数量',
-	`classifys` varchar(2000) comment '分类属性',
+	`classifys_json` varchar(2000) comment '分类属性',
   `data_source_type` varchar(20) DEFAULT NULL comment '数据类型',
 	`data_source_id` bigint comment '数据源id',
   `create_time` datetime comment '创建时间',

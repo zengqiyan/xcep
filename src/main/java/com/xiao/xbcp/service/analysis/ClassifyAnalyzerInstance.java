@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
  */
 
 public class ClassifyAnalyzerInstance {
+
+     
     @Getter
     @Setter
     private AnalyzerDataHandler analyzerDataHandler;

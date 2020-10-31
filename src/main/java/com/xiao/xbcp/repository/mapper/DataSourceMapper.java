@@ -25,21 +25,21 @@ public interface DataSourceMapper {
     public DataSourceListVo listDataSources(DataSourceSearchDto searchDto);
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO data_source (name, params, type, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES (#{name}, #{params}, #{type}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})")
+    @Insert("INSERT INTO data_source (name, params_json, type, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES (#{name}, #{paramsJson}, #{type}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})")
     int insert(DataSource dataSource);
 
-    @Insert("<script>INSERT INTO data_source (name, params, type, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES <foreach collection='dataSources' item='item' separator=','>(#{name}, #{params}, #{type}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})</foreach></script>")
+    @Insert("<script>INSERT INTO data_source (name, params_json, type, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES <foreach collection='dataSources' item='item' separator=','>(#{name}, #{paramsJson}, #{type}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})</foreach></script>")
     int bulkInsert(@Param("dataSources") List<DataSource> dataSources);
 
     @Update("update data_source set is_deleted = 1 where id = #{dataSourceId} ")
     void softDelete(@Param("dataSourceId") long dataSourceId);
 
-    @Update("<script> update set data_source " +
+    @Update("<script> update  data_source set" +
             "        <if test=' name != null and  name != \"\" '>" +
             "            name=#{name}," +
             "        </if>" +
-            "        <if test=' params != null and  params != \"\" '>" +
-            "            params=#{params}," +
+            "        <if test=' paramsJson != null and  paramsJson != \"\" '>" +
+            "            params_json=#{paramsJson}," +
             "        </if>" +
             "        <if test=' type != null and  type != \"\" '>" +
             "            type=#{type}," +
