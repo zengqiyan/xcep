@@ -65,7 +65,7 @@ public class DataSourceRepository {
     public JdbcDataSourceParam getJdbcDataSourceParam(long dataSourceId){
         try {
             DataSource dataSource = dataSourceMapper.getDataSource(dataSourceId);
-            JdbcDataSourceParam  jdbcDataSourceParam = JSON.parseObject(dataSource.getParamsJson(),JdbcDataSourceParam.class);
+            JdbcDataSourceParam  jdbcDataSourceParam =  JSON.parseObject(dataSource.getParamsJson(),JdbcDataSourceParam.class);
             return jdbcDataSourceParam;
         }catch (Exception e){
             e.printStackTrace();

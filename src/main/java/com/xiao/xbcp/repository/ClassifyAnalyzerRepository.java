@@ -13,10 +13,7 @@ import com.xiao.xbcp.entity.ClassifyAnalyzerProperties;
 import com.xiao.xbcp.entity.ClassifyAnalyzerTask;
 import com.xiao.xbcp.repository.mapper.ClassifyAnalyzerMapper;
 import com.xiao.xbcp.util.BeanUtil;
-import com.xiao.xbcp.vo.ClassifyAnalyzerPropertiesVo;
-import com.xiao.xbcp.vo.ClassifyAnalyzerTaskVo;
-import com.xiao.xbcp.vo.ClassifyAnalyzerVo;
-import com.xiao.xbcp.vo.Page;
+import com.xiao.xbcp.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -74,7 +71,9 @@ public class ClassifyAnalyzerRepository {
 
     public ClassifyAnalyzerPropertiesVo getClassifyAnalyzerPropertiesVoByClassifyAnalyzer(long classifyAnalyzerId) {
         ClassifyAnalyzerProperties properties = classifyAnalyzerMapper.getClassifyAnalyzerPropertiesByClassifyAnalyzer(classifyAnalyzerId);
-        return BeanUtil.copy(properties,ClassifyAnalyzerPropertiesVo.class);
+        ClassifyAnalyzerPropertiesVo vo = BeanUtil.copy(properties, ClassifyAnalyzerPropertiesVo.class);
+        vo.setClassifyslist(JSON.parseArray(properties.getClassifysJson(), ClassifyVo.class));
+        return vo;
     }
 
     public ClassifyAnalyzerPropertiesBo getClassifyAnalyzerPropertiesByClassifyAnalyzer(long classifyAnalyzerId) {

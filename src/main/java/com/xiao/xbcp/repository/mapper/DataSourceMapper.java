@@ -34,7 +34,7 @@ public interface DataSourceMapper {
     @Update("update data_source set is_deleted = 1 where id = #{dataSourceId} ")
     void softDelete(@Param("dataSourceId") long dataSourceId);
 
-    @Update("<script> update set data_source " +
+    @Update("<script> update  data_source set" +
             "        <if test=' name != null and  name != \"\" '>" +
             "            name=#{name}," +
             "        </if>" +
