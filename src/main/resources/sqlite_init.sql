@@ -1,7 +1,7 @@
 CREATE TABLE `data_source` (
   `id` INTEGER NOT NULL PRIMARY KEY autoincrement,
   `name` varchar(100) DEFAULT NULL,
-  `params` varchar(1000) DEFAULT NULL,
+  `params_json varchar(1000) DEFAULT NULL,
   `type` varchar(20) DEFAULT NULL,
   `create_time` datetime,
   `create_user` INTEGER DEFAULT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `classify_analyzer_properties` (
   `data_script` varchar(2000) DEFAULT NULL ,
 	`rows` int DEFAULT 0 ,
 	`total_count` int DEFAULT 0 ,
-	`classifys` varchar(2000) ,
+	`classifys_json` varchar(2000) ,
   `data_source_type` varchar(20) DEFAULT NULL ,
 	`data_source_id` bigint  ,
   `create_time` datetime ,

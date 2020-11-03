@@ -22,7 +22,7 @@ public interface DataSourceMapper {
     public DataSource getDataSource(@Param("dataSourceId") long dataSourceId);
 
     @Select("select * from data_source where is_deleted = 0")
-    public DataSourceListVo listDataSources(DataSourceSearchDto searchDto);
+    public List<DataSourceListVo> listDataSources(DataSourceSearchDto searchDto);
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("INSERT INTO data_source (name, params_json, type, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES (#{name}, #{paramsJson}, #{type}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})")
