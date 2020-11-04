@@ -1,7 +1,6 @@
 package com.xiao.xbcp.repository;
 
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.xiao.xbcp.bo.JdbcDataSourceParam;
 import com.xiao.xbcp.dto.DataSourceDetailDto;
@@ -9,6 +8,7 @@ import com.xiao.xbcp.dto.DataSourceSearchDto;
 import com.xiao.xbcp.entity.DataSource;
 import com.xiao.xbcp.repository.mapper.DataSourceMapper;
 import com.xiao.xbcp.util.BeanUtil;
+import com.xiao.xbcp.util.JsonUtil;
 import com.xiao.xbcp.vo.DataSourceDetailVo;
 import com.xiao.xbcp.vo.DataSourceListVo;
 import com.xiao.xbcp.vo.Page;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * DataSourceRepository
@@ -35,7 +34,7 @@ public class DataSourceRepository {
     public DataSourceDetailVo getDataSource(long dataSourceId) {
         DataSource ds = dataSourceMapper.getDataSource(dataSourceId);
         DataSourceDetailVo vo = BeanUtil.copy(ds,DataSourceDetailVo.class);
-        vo.setParamsMap((Map<String, Object>) JSON.parse(ds.getParamsJson()));
+        vo.setParamsMap(JsonUtil.toMap(ds.getParamsJson()));
         return vo;
     }
 
@@ -46,7 +45,7 @@ public class DataSourceRepository {
     }
     public void saveDataSource(DataSourceDetailDto dataSourceDetailDto){
         DataSource dataSource = BeanUtil.copy(dataSourceDetailDto,DataSource.class);
-        dataSource.setParamsJson(JSON.toJSONString(dataSourceDetailDto.getParamsMap()));
+        dataSource.setParamsJson(JsonUtil.toJson(dataSourceDetailDto.getParamsMap()));
         if(dataSourceDetailDto.getId()!=null){
             dataSourceMapper.update(dataSource);
         }else {
@@ -65,7 +64,7 @@ public class DataSourceRepository {
     public JdbcDataSourceParam getJdbcDataSourceParam(long dataSourceId){
         try {
             DataSource dataSource = dataSourceMapper.getDataSource(dataSourceId);
-            JdbcDataSourceParam  jdbcDataSourceParam =  JSON.parseObject(dataSource.getParamsJson(),JdbcDataSourceParam.class);
+            JdbcDataSourceParam  jdbcDataSourceParam =  JsonUtil.toObject(dataSource.getParamsJson(),JdbcDataSourceParam.class);
             return jdbcDataSourceParam;
         }catch (Exception e){
             e.printStackTrace();

@@ -48,7 +48,7 @@ CREATE TABLE `classify_analyzer_properties` (
 CREATE TABLE `classify_analyzer_task` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
 	`classify_analyzer_id` bigint(11) comment '分析器id',
-  `name` varchar(200) DEFAULT NULL comment '名称',
+  `tag` varchar(200) DEFAULT NULL comment '任务标签',
 	`status` varchar(20) DEFAULT NULL comment '状态',
 	`result` varchar(2000) DEFAULT NULL comment '结果',
   `create_time` datetime comment '创建时间',

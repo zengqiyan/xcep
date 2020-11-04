@@ -22,9 +22,9 @@ public class ClassifyAnalyzerTaskDto implements Serializable {
   */
   private long classifyAnalyzerId;
  /**
-  * 名称
+  * 标签
   */
-  private String name;
+  private String tag;
  /**
   * 状态
   */

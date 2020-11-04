@@ -1,18 +1,18 @@
 package com.xiao.xbcp.repository;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.xiao.xbcp.bo.Classify;
-import com.xiao.xbcp.bo.ClassifyAnalyzerPropertiesBo;
 import com.xiao.xbcp.bo.ClassifyAnalyzerBo;
+import com.xiao.xbcp.bo.ClassifyAnalyzerPropertiesBo;
 import com.xiao.xbcp.dto.*;
 import com.xiao.xbcp.entity.ClassifyAnalyzer;
 import com.xiao.xbcp.entity.ClassifyAnalyzerProperties;
 import com.xiao.xbcp.entity.ClassifyAnalyzerTask;
 import com.xiao.xbcp.repository.mapper.ClassifyAnalyzerMapper;
 import com.xiao.xbcp.util.BeanUtil;
+import com.xiao.xbcp.util.JsonUtil;
 import com.xiao.xbcp.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -72,13 +72,13 @@ public class ClassifyAnalyzerRepository {
     public ClassifyAnalyzerPropertiesVo getClassifyAnalyzerPropertiesVoByClassifyAnalyzer(long classifyAnalyzerId) {
         ClassifyAnalyzerProperties properties = classifyAnalyzerMapper.getClassifyAnalyzerPropertiesByClassifyAnalyzer(classifyAnalyzerId);
         ClassifyAnalyzerPropertiesVo vo = BeanUtil.copy(properties, ClassifyAnalyzerPropertiesVo.class);
-        vo.setClassifyslist(JSON.parseArray(properties.getClassifysJson(), ClassifyVo.class));
+        vo.setClassifyslist(JsonUtil.toList(properties.getClassifysJson(),ClassifyVo.class));
         return vo;
     }
 
     public ClassifyAnalyzerPropertiesBo getClassifyAnalyzerPropertiesByClassifyAnalyzer(long classifyAnalyzerId) {
         ClassifyAnalyzerProperties properties = classifyAnalyzerMapper.getClassifyAnalyzerPropertiesByClassifyAnalyzer(classifyAnalyzerId);
-        List<Map<String,Object>> classifyParamList = (List<Map<String, Object>>) JSON.parse(properties.getClassifysJson());
+        List<Map<String,Object>> classifyParamList = JsonUtil.toListMaps(properties.getClassifysJson());
         List<Classify> classifies = new ArrayList<>();
         classifyParamList.forEach(c->{
             String classifyName = c.get("name").toString();
@@ -108,15 +108,18 @@ public class ClassifyAnalyzerRepository {
         }else {
             task.setIsDeleted(0);
             task.setCreateTime(new Date());
-            long id = classifyAnalyzerMapper.insertClassifyAnalyzerTask(task);
-            dto.setId(id);
+            classifyAnalyzerMapper.insertClassifyAnalyzerTask(task);
         }
     }
-
+    public void updateClassifyAnalyzerTaskByTag(ClassifyAnalyzerTaskDto dto) {
+        ClassifyAnalyzerTask task = BeanUtil.copy(dto, ClassifyAnalyzerTask.class);
+        task.setUpdateTime(new Date());
+        classifyAnalyzerMapper.updateClassifyAnalyzerTaskByTag(task);
+    }
     public void saveClassifyAnalyzerProperties(ClassifyAnalyzerPropertiesDto dto) {
         ClassifyAnalyzerProperties properties = BeanUtil.copy(dto,ClassifyAnalyzerProperties.class);
         if(dto.getClassifyList()!=null && dto.getClassifyList().size()>0){
-            properties.setClassifysJson(JSON.toJSONString(dto.getClassifyList()));
+            properties.setClassifysJson(JsonUtil.toJson(dto.getClassifyList()));
         }
         if(dto.getId()!=0){
             properties.setUpdateTime(new Date());

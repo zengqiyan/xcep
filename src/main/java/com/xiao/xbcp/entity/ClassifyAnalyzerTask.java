@@ -26,7 +26,7 @@ public class ClassifyAnalyzerTask implements Serializable {
  /**
   * 名称
   */
-  private String name;
+  private String tag;
  /**
   * 状态
   */

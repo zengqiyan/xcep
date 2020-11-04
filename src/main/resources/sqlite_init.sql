@@ -45,7 +45,7 @@ CREATE TABLE `classify_analyzer_properties` (
 CREATE TABLE `classify_analyzer_task` (
   `id` INTEGER NOT NULL PRIMARY KEY autoincrement,
 	`classify_analyzer_id` INTEGER ,
-  `name` varchar(200) DEFAULT NULL ,
+  `tag` varchar(200) DEFAULT NULL ,
 	`status` varchar(20) DEFAULT NULL,
 	`result` varchar(2000) DEFAULT NULL ,
   `create_time` datetime ,

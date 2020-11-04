@@ -1,7 +1,8 @@
 package com.xiao.xbcp.service.analysis;
 
-import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.xiao.xbcp.bo.ClassifyAnalyzerPropertiesBo;
+import com.xiao.xbcp.bo.ClassifyRule;
 import com.xiao.xbcp.constant.AnalyzerTaskStatus;
 import com.xiao.xbcp.constant.DataSourceType;
 import com.xiao.xbcp.dto.ClassifyAnalyzerTaskDto;
@@ -9,7 +10,7 @@ import com.xiao.xbcp.repository.ClassifyAnalyzerRepository;
 import com.xiao.xbcp.service.analysis.handler.AnalyzerDataHandler;
 import com.xiao.xbcp.service.analysis.handler.MySqlAnalyzerHandler;
 import com.xiao.xbcp.service.datasource.DataSourceService;
-import com.xiao.xbcp.bo.ClassifyRule;
+import com.xiao.xbcp.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  *
@@ -46,17 +48,17 @@ public class ClassifyAnalyzerService {
        ClassifyAnalyzerInstance analyzer = getInstance(analyzerId);
        ClassifyAnalyzerTaskDto classifyAnalyzerTaskDto = new ClassifyAnalyzerTaskDto();
        classifyAnalyzerTaskDto.setClassifyAnalyzerId(analyzerId);
-       classifyAnalyzerTaskDto.setName("Task_"+System.currentTimeMillis());
+       classifyAnalyzerTaskDto.setTag("Task_"+analyzerId+"_"+ UUID.randomUUID().toString().replace("-", ""));
        classifyAnalyzerTaskDto.setStatus(AnalyzerTaskStatus.PROGRESS.getValue());
        classifyAnalyzerRepository.saveClassifyAnalyzerTask(classifyAnalyzerTaskDto);
        try {
            List<ClassifyRule> classifyRule = analyzer.analysisClassifyRule();
-           classifyAnalyzerTaskDto.setResult(JSON.toJSONString(classifyRule)) ;
+           classifyAnalyzerTaskDto.setResult(JsonUtil.toJson(classifyRule)) ;
            classifyAnalyzerTaskDto.setStatus(AnalyzerTaskStatus.SUCCESS.getValue());
+           classifyAnalyzerRepository.updateClassifyAnalyzerTaskByTag(classifyAnalyzerTaskDto);
        }catch (Exception e){
            e.printStackTrace();
            classifyAnalyzerTaskDto.setStatus(AnalyzerTaskStatus.FAIL.getValue());
-       }finally {
            classifyAnalyzerRepository.saveClassifyAnalyzerTask(classifyAnalyzerTaskDto);
        }
    }

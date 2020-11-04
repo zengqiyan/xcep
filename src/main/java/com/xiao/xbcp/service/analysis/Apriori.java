@@ -2,6 +2,8 @@ package com.xiao.xbcp.service.analysis;
 
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author XJY
@@ -48,10 +50,9 @@ public class Apriori
 	public Map<String, Integer> apriori(List<Map<String,Object>> oneDataList,int rows,DataManager dataManager)
 	{
 		Map<String, Integer> stepFrequentSetMap = new HashMap<>();
-
-		stepFrequentSetMap.putAll(findFrequentOneSets(toDataList(oneDataList)));
+		stepFrequentSetMap.putAll(findFrequentOneSets(oneDataList,rows,dataManager));
 		//频繁项集
-		Map<String, Integer> frequentSetMap = new HashMap<String, Integer>();
+		Map<String, Integer> frequentSetMap = new HashMap<>();
 		frequentSetMap.putAll(stepFrequentSetMap);
 		
 		while(stepFrequentSetMap!=null && stepFrequentSetMap.size()>0)
@@ -140,28 +141,42 @@ public class Apriori
 		return newDataList;
 	}
 
-/**
-	 * find frequent 1 itemsets
-	 * @param dataList
+
+	/**
+	 *
+	 * @param oneDataList
+	 * @param rows
+	 * @param dataManager
 	 * @return
 	 */
-
-	private Map<String, Integer> findFrequentOneSets(List<String> dataList)
+	private Map<String, Integer> findFrequentOneSets(List<Map<String,Object>> oneDataList,int rows,DataManager dataManager)
 	{
 		Map<String, Integer> resultSetMap = new HashMap<>();
-		
-		for(String data:dataList)
-		{
-			String[] strings = data.split(ITEM_SPLIT);
-			for(String string:strings)
+		toDataList(oneDataList).forEach(o->{
+			resultSetMap.put(o,0);
+		});
+		int offset = 0;
+		while (true){
+			List<Map<String, Object>> orgDataList = dataManager.run(offset);
+			if(orgDataList==null || orgDataList.size()==0){
+				break;
+			}else {
+				offset = offset+rows;
+			}
+			List<String> dataList = toDataList(orgDataList);
+			for(String data:dataList)
 			{
-				string += ITEM_SPLIT;
-				if(resultSetMap.get(string)==null)
+				String[] strings = data.split(ITEM_SPLIT);
+				for(String string:strings)
 				{
-					resultSetMap.put(string, 1);
-				}
-				else {
-					resultSetMap.put(string, resultSetMap.get(string)+1);
+					string += ITEM_SPLIT;
+					if(resultSetMap.get(string)==null)
+					{
+						resultSetMap.put(string, 1);
+					}
+					else {
+						resultSetMap.put(string, resultSetMap.get(string)+1);
+					}
 				}
 			}
 		}

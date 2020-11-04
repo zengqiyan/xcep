@@ -1,5 +1,7 @@
 package com.xiao.xbcp.vo;
 
+import lombok.Data;
+
 /**
  * Description: 请描述你的文件
  *
@@ -8,6 +10,8 @@ package com.xiao.xbcp.vo;
  * <p>
  * All rights Reserved, Designed www.xiao100.com
  */
+@Data
 public class ClassifyAnalyzerTaskVo {
-
+   private long id;
+   private String tag;
 }

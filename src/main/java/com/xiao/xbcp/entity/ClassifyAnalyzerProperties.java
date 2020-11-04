@@ -30,6 +30,11 @@ public class ClassifyAnalyzerProperties implements Serializable {
   * 总数量
   */
   private int totalCount;
+
+ /**
+  * 行数
+  */
+ private int rows;
  /**
   * 分类属性
   */

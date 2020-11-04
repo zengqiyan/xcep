@@ -103,7 +103,17 @@ public interface ClassifyAnalyzerMapper {
     void updateClassifyAnalyzerTask(ClassifyAnalyzerTask classifyAnalyzerTask);
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO classify_analyzer_task (classify_analyzer_id, name, status, result, create_time, create_user, update_time, update_user, is_deleted) VALUES (#{classifyAnalyzerId}, #{name}, #{status}, #{result}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{isDeleted})")
+    @Insert("INSERT INTO classify_analyzer_task (classify_analyzer_id, tag, status, result, create_time, create_user, update_time, update_user, is_deleted) VALUES (#{classifyAnalyzerId}, #{tag}, #{status}, #{result}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{isDeleted})")
     long insertClassifyAnalyzerTask(ClassifyAnalyzerTask classifyAnalyzerTask);
 
+    @Update("<script> update  classify_analyzer_task set" +
+            "        <if test=' status != null and  status != \"\" '>" +
+            "             status=#{status}," +
+            "        </if>" +
+            "        <if test=' result != null and  result != \"\" '>" +
+            "             result=#{result}," +
+            "        </if>" +
+            "         update_time = #{updateTime} where tag = #{tag}" +
+            "</script>")
+    void updateClassifyAnalyzerTaskByTag(ClassifyAnalyzerTask task);
 }

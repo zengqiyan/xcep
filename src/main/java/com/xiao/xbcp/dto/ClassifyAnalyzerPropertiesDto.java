@@ -26,6 +26,11 @@ public class ClassifyAnalyzerPropertiesDto implements Serializable {
   * 数据脚本
   */
   private String dataScript;
+
+ /**
+  * 行数
+  */
+ private int rows;
  /**
   * 总数量
   */

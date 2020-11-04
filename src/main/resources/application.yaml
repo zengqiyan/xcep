@@ -1,7 +1,7 @@
 spring:
  datasource:
   driver-class-name: org.sqlite.JDBC
-  url: jdbc:sqlite:/Users/kylezeng/develop/workspace/xcep/db/xbcp.db
+  url: jdbc:sqlite:D:/develop/workspaces/xbcp/db/xbcp.db
   username:
   password:
 mybatis:
