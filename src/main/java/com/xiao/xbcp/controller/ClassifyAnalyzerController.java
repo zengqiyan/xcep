@@ -1,12 +1,10 @@
 package com.xiao.xbcp.controller;
 
-import com.xiao.xbcp.bo.ClassifyRule;
 import com.xiao.xbcp.dto.ClassifyAnalyzerDto;
-import com.xiao.xbcp.dto.ClassifyAnalyzerPropertiesDto;
 import com.xiao.xbcp.dto.ClassifyAnalyzerSearchDto;
 import com.xiao.xbcp.dto.ClassifyAnalyzerTaskSearchDto;
-import com.xiao.xbcp.entity.ClassifyAnalyzerTask;
 import com.xiao.xbcp.service.analysis.ClassifyAnalyzerManageService;
+import com.xiao.xbcp.service.analysis.ClassifyAnalyzerService;
 import com.xiao.xbcp.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-
-import com.xiao.xbcp.service.analysis.ClassifyAnalyzerService;
 /**
  * Description: 请描述你的文件
  *
@@ -47,11 +43,6 @@ public class ClassifyAnalyzerController {
         return new Response<>(classifyAnalyzerManageService.pageClassifyAnalyzerTasks(searchDto));
     }
 
-    @RequestMapping("/getClassAnalyzerPropertiesByClassifyAnalyzer")
-    public Response<ClassifyAnalyzerPropertiesVo> getClassifyAnalyzerPropertiesByClassifyAnalyzer(long classifyAnalyzerId){
-        ClassifyAnalyzerPropertiesVo vo = classifyAnalyzerManageService.getClassifyAnalyzerPropertiesByClassifyAnalyzer(classifyAnalyzerId);
-        return  Response.of(vo);
-    }
 
     @RequestMapping("/getInstanceData")
     public Response<List<Map<String, Object>>> getInstanceData(long analyzerId,int rows){
@@ -73,15 +64,11 @@ public class ClassifyAnalyzerController {
         return  Response.success();
     }
 
-    @PostMapping("/saveClassifyAnalyzerProperties")
-    public Response saveClassifyAnalyzerProperties(@RequestBody ClassifyAnalyzerPropertiesDto dto){
-        classifyAnalyzerManageService.saveClassifyAnalyzerProperties(dto);
-        return  Response.success();
-    }
 
     @PostMapping("/runInstance")
     public Response runInstance(long analyzerId){
         classifyAnalyzerService.runInstance(analyzerId);
         return  Response.success();
     }
+
 }

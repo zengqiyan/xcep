@@ -1,23 +1,13 @@
 package com.xiao.xbcp.repository.mapper;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.xiao.xbcp.bo.JdbcDataSourceParam;
-import com.xiao.xbcp.dto.*;
+import com.xiao.xbcp.dto.ClassifyAnalyzerSearchDto;
+import com.xiao.xbcp.dto.ClassifyAnalyzerTaskSearchDto;
 import com.xiao.xbcp.entity.ClassifyAnalyzer;
-import com.xiao.xbcp.entity.ClassifyAnalyzerProperties;
 import com.xiao.xbcp.entity.ClassifyAnalyzerTask;
-import com.xiao.xbcp.entity.DataSource;
-import com.xiao.xbcp.util.BeanUtil;
-import com.xiao.xbcp.vo.*;
+import com.xiao.xbcp.vo.ClassifyAnalyzerTaskVo;
+import com.xiao.xbcp.vo.ClassifyAnalyzerVo;
 import org.apache.ibatis.annotations.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,11 +25,9 @@ public interface ClassifyAnalyzerMapper {
 
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO classify_analyzer (name, status, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES (#{name}, #{status}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})")
+    @Insert("INSERT INTO classify_analyzer (name, status,data_script, total_count,rows, classifys_json, data_source_type, data_source_id, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES (#{name}, #{status}, #{dataScript}, #{totalCount}, #{rows},#{classifysJson}, #{dataSourceType}, #{dataSourceId},#{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})")
     int insert(ClassifyAnalyzer classifyAnalyzer);
 
-    @Insert("<script>INSERT INTO classify_analyzer (name, status, create_time, create_user, update_time, update_user, env_id, is_deleted) VALUES <foreach collection='classifyAnalyzers' item='item' separator=','>(#{name}, #{status}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{envId}, #{isDeleted})</foreach></script>")
-    int bulkInsert(@Param("classifyAnalyzers") List<ClassifyAnalyzer> classifyAnalyzers);
 
     @Select("SELECT * FROM classify_analyzer")
     List<ClassifyAnalyzerVo> listClassifyAnalyzers(ClassifyAnalyzerSearchDto searchDto);
@@ -47,23 +35,12 @@ public interface ClassifyAnalyzerMapper {
     @Select("SELECT * FROM classify_analyzer_task where classify_analyzer_id=#{classifyAnalyzerId}")
     List<ClassifyAnalyzerTaskVo> listClassifyAnalyzerTasks(ClassifyAnalyzerTaskSearchDto searchDto);
 
-    @Select("SELECT * FROM classify_analyzer_properties where classify_analyzer_id = #{classifyAnalyzerId} order by id desc limit 1")
-    ClassifyAnalyzerProperties getClassifyAnalyzerPropertiesByClassifyAnalyzer(long classifyAnalyzerId);
-
-
-
-
-
-
-
-    void update(ClassifyAnalyzer classifyAnalyzer);
-
-    @Update("update classify_analyzer set is_deleted = 1 where id = #{id} ")
-    void softDelete(long id);
-
-    @Update("<script> update  classify_analyzer_properties set" +
-            "        <if test=' classifyAnalyzerId != null and  classifyAnalyzerId != \"\" '>" +
-            "            classify_analyzer_id=#{classifyAnalyzerId}," +
+    @Update("<script> update  classify_analyzer set" +
+            "        <if test=' name != null and  name != \"\" '>" +
+            "            name=#{name}," +
+            "        </if>" +
+            "        <if test=' status != null and  status != \"\" '>" +
+            "            status=#{status}," +
             "        </if>" +
             "        <if test=' dataScript != null and  dataScript != \"\" '>" +
             "             data_script=#{dataScript}," +
@@ -82,11 +59,11 @@ public interface ClassifyAnalyzerMapper {
             "        </if>" +
             "         update_time = #{updateTime} where id = #{id}" +
             "</script>")
-    void updateClassifyAnalyzerProperties(ClassifyAnalyzerProperties classifyAnalyzerProperties);
+    void update(ClassifyAnalyzer classifyAnalyzer);
 
-    @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO classify_analyzer_properties (classify_analyzer_id, data_script, total_count, classifys_json, data_source_type, data_source_id, create_time, create_user, update_time, update_user, is_deleted) VALUES (#{classifyAnalyzerId}, #{dataScript}, #{totalCount}, #{classifysJson}, #{dataSourceType}, #{dataSourceId}, #{createTime}, #{createUser}, #{updateTime}, #{updateUser}, #{isDeleted})")
-    long insertClassifyAnalyzerProperties(ClassifyAnalyzerProperties classifyAnalyzerProperties);
+    @Update("update classify_analyzer set is_deleted = 1 where id = #{id} ")
+    void softDelete(long id);
+
 
     @Update("update classify_analyzer_properties set is_deleted = 1 where id = #{id} ")
     void softDeleteClassifyAnalyzerProperties(long id);

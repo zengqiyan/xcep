@@ -30,6 +30,30 @@ public class ClassifyAnalyzer implements Serializable {
   */
   private String status;
  /**
+  * 数据脚本
+  */
+ private String dataScript;
+ /**
+  * 总数量
+  */
+ private int totalCount;
+ /**
+  * 行数
+  */
+ private int rows;
+ /**
+  * 分类属性
+  */
+ private String classifysJson;
+ /**
+  * 数据类型
+  */
+ private String dataSourceType;
+ /**
+  * 数据源id
+  */
+ private long dataSourceId;
+  /**
   * 创建时间
   */
   private Date createTime;

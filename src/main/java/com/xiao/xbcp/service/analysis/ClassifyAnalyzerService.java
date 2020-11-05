@@ -1,7 +1,6 @@
 package com.xiao.xbcp.service.analysis;
 
-import com.google.gson.Gson;
-import com.xiao.xbcp.bo.ClassifyAnalyzerPropertiesBo;
+import com.xiao.xbcp.bo.ClassifyAnalyzerBo;
 import com.xiao.xbcp.bo.ClassifyRule;
 import com.xiao.xbcp.constant.AnalyzerTaskStatus;
 import com.xiao.xbcp.constant.DataSourceType;
@@ -36,11 +35,9 @@ public class ClassifyAnalyzerService {
     @Autowired
     private DataSourceService dataSourceService;
 
-    private Map<Long, ClassifyAnalyzerInstance> analyzers = new HashMap<>();
-
     public List<Map<String, Object>> getInstanceData(long analyzerId,int rows){
-        ClassifyAnalyzerPropertiesBo properties = classifyAnalyzerRepository.getClassifyAnalyzerPropertiesByClassifyAnalyzer(analyzerId);
-        AnalyzerDataHandler handler = getAnalyzerDataHandler(properties);
+        ClassifyAnalyzerBo classifyAnalyzerBo = classifyAnalyzerRepository.getClassifyAnalyzerBo(analyzerId);
+        AnalyzerDataHandler handler = getAnalyzerDataHandler(classifyAnalyzerBo);
         return handler.getDataList(rows);
     }
    @Async
@@ -64,21 +61,21 @@ public class ClassifyAnalyzerService {
    }
 
     private ClassifyAnalyzerInstance getInstance(long analyzerId){
-        if(analyzers.get(analyzerId)!=null){
-            return analyzers.get(analyzerId);
-        }
-        ClassifyAnalyzerInstance analyzer = new ClassifyAnalyzerInstance();
-        ClassifyAnalyzerPropertiesBo properties = classifyAnalyzerRepository.getClassifyAnalyzerPropertiesByClassifyAnalyzer(analyzerId);
-        analyzer.setRows(properties.getRows());
-        analyzer.setClassifys(properties.getClassifys());
-        analyzer.setAnalyzerDataHandler(getAnalyzerDataHandler(properties));
-        analyzers.put(analyzerId,analyzer);
+        ClassifyAnalyzerBo classifyAnalyzerBo = classifyAnalyzerRepository.getClassifyAnalyzerBo(analyzerId);
+        ClassifyAnalyzerInstance analyzer = getInstance(classifyAnalyzerBo);
         return analyzer;
     }
-    private AnalyzerDataHandler getAnalyzerDataHandler(ClassifyAnalyzerPropertiesBo properties){
-        if(DataSourceType.MYSQL.getValue().equals(properties.getDataSourceType())){
-            MySqlAnalyzerHandler handler = new MySqlAnalyzerHandler(properties);
-            handler.setDataSource(dataSourceService.getMySqlDataSource(properties.getDataSourceId()));
+    private ClassifyAnalyzerInstance getInstance(ClassifyAnalyzerBo classifyAnalyzerBo){
+        ClassifyAnalyzerInstance analyzer = new ClassifyAnalyzerInstance();
+        analyzer.setRows(classifyAnalyzerBo.getRows());
+        analyzer.setClassifys(classifyAnalyzerBo.getClassifys());
+        analyzer.setAnalyzerDataHandler(getAnalyzerDataHandler(classifyAnalyzerBo));
+        return analyzer;
+    }
+    private AnalyzerDataHandler getAnalyzerDataHandler(ClassifyAnalyzerBo classifyAnalyzerBo){
+        if(DataSourceType.MYSQL.getValue().equals(classifyAnalyzerBo.getDataSourceType())){
+            MySqlAnalyzerHandler handler = new MySqlAnalyzerHandler(classifyAnalyzerBo);
+            handler.setDataSource(dataSourceService.getMySqlDataSource(classifyAnalyzerBo.getDataSourceId()));
             return handler;
         }
         return null;

@@ -1,21 +1,13 @@
 package com.xiao.xbcp.controller;
 
-import com.xiao.xbcp.dto.ClassifyAnalyzerDto;
-import com.xiao.xbcp.dto.ClassifyAnalyzerPropertiesDto;
 import com.xiao.xbcp.dto.ClassifyAnalyzerSearchDto;
-import com.xiao.xbcp.dto.ClassifyAnalyzerTaskSearchDto;
-import com.xiao.xbcp.service.analysis.ClassifyAnalyzerManageService;
-import com.xiao.xbcp.service.analysis.ClassifyAnalyzerService;
 import com.xiao.xbcp.service.setting.SettingService;
-import com.xiao.xbcp.vo.*;
+import com.xiao.xbcp.vo.ClassifyAnalyzerVo;
+import com.xiao.xbcp.vo.Page;
+import com.xiao.xbcp.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Description: 请描述你的文件

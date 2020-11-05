@@ -1,6 +1,6 @@
 package com.xiao.xbcp.service.analysis.handler;
 
-import com.xiao.xbcp.bo.ClassifyAnalyzerPropertiesBo;
+import com.xiao.xbcp.bo.ClassifyAnalyzerBo;
 import com.xiao.xbcp.bo.Classify;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +18,8 @@ public abstract class AnalyzerDataHandler {
 
     public abstract  List<Map<String,Object>>  getDataList(int offset);
 
-    public  AnalyzerDataHandler(ClassifyAnalyzerPropertiesBo analyzerProperties){
-        setRows(analyzerProperties.getRows());
+    public  AnalyzerDataHandler(ClassifyAnalyzerBo classifyAnalyzerBo){
+        setRows(classifyAnalyzerBo.getRows());
         setClassifys(getClassifys());
     }
     private int totalCount;

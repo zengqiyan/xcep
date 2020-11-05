@@ -1,6 +1,6 @@
 package com.xiao.xbcp.service.analysis.handler;
 
-import com.xiao.xbcp.bo.ClassifyAnalyzerPropertiesBo;
+import com.xiao.xbcp.bo.ClassifyAnalyzerBo;
 import lombok.Setter;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
@@ -22,9 +22,9 @@ public class MySqlAnalyzerHandler extends AnalyzerDataHandler{
 
     private String queryDataSql;
 
-    public MySqlAnalyzerHandler(ClassifyAnalyzerPropertiesBo properties) {
-        super(properties);
-        queryDataSql = properties.getDataScript();
+    public MySqlAnalyzerHandler(ClassifyAnalyzerBo classifyAnalyzerBo) {
+        super(classifyAnalyzerBo);
+        queryDataSql = classifyAnalyzerBo.getDataScript();
     }
 
     @Override

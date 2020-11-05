@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Description: 请描述你的文件
@@ -31,4 +32,29 @@ public class ClassifyAnalyzerBo implements Serializable {
      * 状态
      */
     private String status;
+
+    /**
+     * 分析量
+     */
+    private int rows;
+    /**
+     * 数据脚本
+     */
+    private String dataScript;
+
+    /**
+     * 数据源id
+     */
+    private long dataSourceId;
+    /**
+     * 总数量
+     */
+    private int totalCount;
+
+    /**
+     * 数据类型
+     */
+    private String dataSourceType;
+
+    private List<Classify> classifys;
 }

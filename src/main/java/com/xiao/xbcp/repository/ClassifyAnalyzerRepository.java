@@ -5,15 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.xiao.xbcp.bo.Classify;
 import com.xiao.xbcp.bo.ClassifyAnalyzerBo;
-import com.xiao.xbcp.bo.ClassifyAnalyzerPropertiesBo;
-import com.xiao.xbcp.dto.*;
+import com.xiao.xbcp.dto.ClassifyAnalyzerDto;
+import com.xiao.xbcp.dto.ClassifyAnalyzerSearchDto;
+import com.xiao.xbcp.dto.ClassifyAnalyzerTaskDto;
+import com.xiao.xbcp.dto.ClassifyAnalyzerTaskSearchDto;
 import com.xiao.xbcp.entity.ClassifyAnalyzer;
-import com.xiao.xbcp.entity.ClassifyAnalyzerProperties;
 import com.xiao.xbcp.entity.ClassifyAnalyzerTask;
 import com.xiao.xbcp.repository.mapper.ClassifyAnalyzerMapper;
 import com.xiao.xbcp.util.BeanUtil;
 import com.xiao.xbcp.util.JsonUtil;
-import com.xiao.xbcp.vo.*;
+import com.xiao.xbcp.vo.ClassifyAnalyzerTaskVo;
+import com.xiao.xbcp.vo.ClassifyAnalyzerVo;
+import com.xiao.xbcp.vo.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -39,46 +42,8 @@ public class ClassifyAnalyzerRepository {
     private ClassifyAnalyzerMapper classifyAnalyzerMapper;
 
     public ClassifyAnalyzerBo getClassifyAnalyzerBo(long id) {
-        return BeanUtil.copy(classifyAnalyzerMapper.getById(id),ClassifyAnalyzerBo.class);
-    }
-
-    public Page<ClassifyAnalyzerVo> pageClassifyAnalyzers(ClassifyAnalyzerSearchDto searchDto){
-        Page<ClassifyAnalyzerVo> vos = BeanUtil.toPage( PageHelper.startPage(searchDto.getPageNum(), searchDto.getPageSize()).doSelectPageInfo(
-                () -> classifyAnalyzerMapper.listClassifyAnalyzers(searchDto)));
-        return vos;
-    }
-
-    public Page<ClassifyAnalyzerTaskVo> pageClassifyAnalyzerTasks(ClassifyAnalyzerTaskSearchDto searchDto) {
-        Page<ClassifyAnalyzerTaskVo> vos = BeanUtil.toPage( PageHelper.startPage(searchDto.getPageNum(), searchDto.getPageSize()).doSelectPageInfo(
-                () -> classifyAnalyzerMapper.listClassifyAnalyzerTasks(searchDto)));
-        return vos;
-    }
-
-    public void saveClassifyAnalyzer(ClassifyAnalyzerDto classifyAnalyzerDto){
-        ClassifyAnalyzer classifyAnalyzer = BeanUtil.copy(classifyAnalyzerDto, ClassifyAnalyzer.class);
-        if(classifyAnalyzer.getId()!=0){
-            classifyAnalyzerMapper.update(classifyAnalyzer);
-        }else {
-            classifyAnalyzer.setIsDeleted(0);
-            classifyAnalyzer.setCreateTime(new Date());
-            classifyAnalyzerMapper.insert(classifyAnalyzer);
-        }
-
-    }
-    public void deleteClassifyAnalyzer(long id){
-        classifyAnalyzerMapper.softDelete(id);
-    }
-
-    public ClassifyAnalyzerPropertiesVo getClassifyAnalyzerPropertiesVoByClassifyAnalyzer(long classifyAnalyzerId) {
-        ClassifyAnalyzerProperties properties = classifyAnalyzerMapper.getClassifyAnalyzerPropertiesByClassifyAnalyzer(classifyAnalyzerId);
-        ClassifyAnalyzerPropertiesVo vo = BeanUtil.copy(properties, ClassifyAnalyzerPropertiesVo.class);
-        vo.setClassifyslist(JsonUtil.toList(properties.getClassifysJson(),ClassifyVo.class));
-        return vo;
-    }
-
-    public ClassifyAnalyzerPropertiesBo getClassifyAnalyzerPropertiesByClassifyAnalyzer(long classifyAnalyzerId) {
-        ClassifyAnalyzerProperties properties = classifyAnalyzerMapper.getClassifyAnalyzerPropertiesByClassifyAnalyzer(classifyAnalyzerId);
-        List<Map<String,Object>> classifyParamList = JsonUtil.toListMaps(properties.getClassifysJson());
+        ClassifyAnalyzer classifyAnalyzer = classifyAnalyzerMapper.getById(id);
+        List<Map<String,Object>> classifyParamList = JsonUtil.toListMaps(classifyAnalyzer.getClassifysJson());
         List<Classify> classifies = new ArrayList<>();
         classifyParamList.forEach(c->{
             String classifyName = c.get("name").toString();
@@ -95,9 +60,39 @@ public class ClassifyAnalyzerRepository {
                 classifies.add(classify);
             });
         });
-        ClassifyAnalyzerPropertiesBo vo = BeanUtil.copy(properties, ClassifyAnalyzerPropertiesBo.class);
-        vo.setClassifys(classifies);
-        return vo;
+        ClassifyAnalyzerBo bo =  BeanUtil.copy(classifyAnalyzer,ClassifyAnalyzerBo.class);
+        bo.setClassifys(classifies);
+        return bo;
+    }
+
+    public Page<ClassifyAnalyzerVo> pageClassifyAnalyzers(ClassifyAnalyzerSearchDto searchDto){
+        Page<ClassifyAnalyzerVo> vos = BeanUtil.toPage( PageHelper.startPage(searchDto.getPageNum(), searchDto.getPageSize()).doSelectPageInfo(
+                () -> classifyAnalyzerMapper.listClassifyAnalyzers(searchDto)));
+        return vos;
+    }
+
+    public Page<ClassifyAnalyzerTaskVo> pageClassifyAnalyzerTasks(ClassifyAnalyzerTaskSearchDto searchDto) {
+        Page<ClassifyAnalyzerTaskVo> vos = BeanUtil.toPage( PageHelper.startPage(searchDto.getPageNum(), searchDto.getPageSize()).doSelectPageInfo(
+                () -> classifyAnalyzerMapper.listClassifyAnalyzerTasks(searchDto)));
+        return vos;
+    }
+
+    public void saveClassifyAnalyzer(ClassifyAnalyzerDto classifyAnalyzerDto){
+        ClassifyAnalyzer classifyAnalyzer = BeanUtil.copy(classifyAnalyzerDto, ClassifyAnalyzer.class);
+        if(classifyAnalyzerDto.getClassifyList()!=null && classifyAnalyzerDto.getClassifyList().size()>0){
+            classifyAnalyzer.setClassifysJson(JsonUtil.toJson(classifyAnalyzerDto.getClassifyList()));
+        }
+        if(classifyAnalyzer.getId()!=0){
+            classifyAnalyzerMapper.update(classifyAnalyzer);
+        }else {
+            classifyAnalyzer.setIsDeleted(0);
+            classifyAnalyzer.setCreateTime(new Date());
+            classifyAnalyzerMapper.insert(classifyAnalyzer);
+        }
+
+    }
+    public void deleteClassifyAnalyzer(long id){
+        classifyAnalyzerMapper.softDelete(id);
     }
 
     public void saveClassifyAnalyzerTask(ClassifyAnalyzerTaskDto dto) {
@@ -115,25 +110,6 @@ public class ClassifyAnalyzerRepository {
         ClassifyAnalyzerTask task = BeanUtil.copy(dto, ClassifyAnalyzerTask.class);
         task.setUpdateTime(new Date());
         classifyAnalyzerMapper.updateClassifyAnalyzerTaskByTag(task);
-    }
-    public void saveClassifyAnalyzerProperties(ClassifyAnalyzerPropertiesDto dto) {
-        ClassifyAnalyzerProperties properties = BeanUtil.copy(dto,ClassifyAnalyzerProperties.class);
-        if(dto.getClassifyList()!=null && dto.getClassifyList().size()>0){
-            properties.setClassifysJson(JsonUtil.toJson(dto.getClassifyList()));
-        }
-        if(dto.getId()!=0){
-            properties.setUpdateTime(new Date());
-            classifyAnalyzerMapper.updateClassifyAnalyzerProperties(properties);
-        }else {
-            properties.setIsDeleted(0);
-            properties.setCreateTime(new Date());
-            long id = classifyAnalyzerMapper.insertClassifyAnalyzerProperties(properties);
-            dto.setId(id);
-        }
-    }
-
-    public void deleteClassifyAnalyzerProperties(long id) {
-        classifyAnalyzerMapper.softDeleteClassifyAnalyzerProperties(id);
     }
 
 
